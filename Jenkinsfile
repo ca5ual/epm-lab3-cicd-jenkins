@@ -21,26 +21,32 @@ pipeline {
 
         stage ('Build docker image') {
             steps {
-                if (env.BRANCH_NAME == 'main') {
-                    sh 'docker build -t nodemain:v1.0 .' 
-                } else if (env.BRANCH_NAME == 'dev') {
-                    sh 'docker build -t nodedev:v1.0'
+                script {
+                    if (env.BRANCH_NAME == 'main') {
+                        sh 'docker build -t nodemain:v1.0 .' 
+                    } else if (env.BRANCH_NAME == 'dev') {
+                        sh 'docker build -t nodedev:v1.0'
+                    }
                 }
             }
         }
 
         stage ('Remove old containers') {
             steps {
-                sh 'docker rm -f $(docker ps -aq)'
+                script {
+                    sh 'docker rm -f $(docker ps -aq)'
+                }
             }
         }
 
         stage ('Run containers') {
             steps {
-                if (env.BRANCH_NAME == 'main') {
-                    sh 'docker run -d --expose 3000 -p 3000:3000 nodemain:v1.0'
-                } else if (env.BRANCH_NAME == 'dev') {
-                    sh 'docker run -d --expose 3001 -p 3001:3000 nodedev:v1.0'
+                script {
+                    if (env.BRANCH_NAME == 'main') {
+                        sh 'docker run -d --expose 3000 -p 3000:3000 nodemain:v1.0'
+                    } else if (env.BRANCH_NAME == 'dev') {
+                        sh 'docker run -d --expose 3001 -p 3001:3000 nodedev:v1.0'
+                    }
                 }
             }
         }

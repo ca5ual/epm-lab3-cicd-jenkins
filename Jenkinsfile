@@ -43,9 +43,9 @@ pipeline {
             steps {
                 script {
                     if (env.BRANCH_NAME == 'main') {
-                        sh 'docker run -d --expose 3000 -p 3000:3000 nodemain:v1.0'
+                        sh 'docker run -d --name nodemain --expose 3000 -p 3000:3000 nodemain:v1.0'
                     } else if (env.BRANCH_NAME == 'dev') {
-                        sh 'docker run -d --expose 3001 -p 3001:3000 nodedev:v1.0'
+                        sh 'docker run nodedev -d --name nodedev --expose 3001 -p 3001:3000 nodedev:v1.0'
                     }
                 }
             }

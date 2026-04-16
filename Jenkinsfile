@@ -19,13 +19,25 @@ pipeline {
             }
         }
 
+        stage ('Set ENV') {
+            steps {
+                script {
+                    if (env.BRANCH_NAME == 'main') {
+                        env.ENV = 'nodemain'
+                    } else if (env.BRANCH_NAME == 'dev') {
+                        env.ENV = 'nodedev'
+                    }
+                }
+            }
+        }
+
         stage ('Build docker image') {
             steps {
                 script {
                     if (env.BRANCH_NAME == 'main') {
-                        sh 'docker build -t nodemain:v1.0 .' 
+                        sh 'docker build -t ${ENV}:v1.0 .' 
                     } else if (env.BRANCH_NAME == 'dev') {
-                        sh 'docker build -t nodedev:v1.0 .'
+                        sh 'docker build -t ${ENV}:v1.0 .'
                     }
                 }
             }
@@ -34,7 +46,7 @@ pipeline {
         stage ('Remove old containers') {
             steps {
                 script {
-                    sh 'docker rm -f $(docker ps -aq --filter "name=nodemain" --filter "name=nodedev") || true'
+                    sh 'docker rm -f ${ENV} || true'
                 }
             }
         }
@@ -43,9 +55,9 @@ pipeline {
             steps {
                 script {
                     if (env.BRANCH_NAME == 'main') {
-                        sh 'docker run -d --name nodemain --expose 3000 -p 3000:3000 nodemain:v1.0'
+                        sh 'docker run -d --name ${ENV} --expose 3000 -p 3000:3000 ${ENV}:v1.0'
                     } else if (env.BRANCH_NAME == 'dev') {
-                        sh 'docker run -d --name nodedev --expose 3001 -p 3001:3000 nodedev:v1.0'
+                        sh 'docker run -d --name ${ENV} --expose 3001 -p 3001:3000 ${ENV}:v1.0'
                     }
                 }
             }

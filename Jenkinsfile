@@ -61,7 +61,7 @@ pipeline {
                     if (env.BRANCH_NAME == 'main') {
                         sh 'docker run -d --name ${ENV} --expose ${PORT} -p ${PORT}:${PORT} ${ENV}:${TAG}'
                     } else if (env.BRANCH_NAME == 'dev') {
-                        sh 'docker run -d --name ${ENV} --expose ${PORT} -p ${PORT}:${PORT} ${ENV}:${TAG}'
+                        sh 'docker run -d --name ${ENV} --expose ${PORT} -p ${PORT}:3000 ${ENV}:${TAG}'
                     }
                 }
             }

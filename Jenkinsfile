@@ -25,11 +25,9 @@ pipeline {
                     if (env.BRANCH_NAME == 'main') {
                         env.ENV = 'nodemain'
                         env.PORT = '3000'
-                        env.TAG = "v1.0"
                     } else if (env.BRANCH_NAME == 'dev') {
                         env.ENV = 'nodedev'
                         env.PORT = '3001'
-                        env.TAG = "v1.0"
                     }
                 }
             }
@@ -39,9 +37,9 @@ pipeline {
             steps {
                 script {
                     if (env.BRANCH_NAME == 'main') {
-                        sh 'docker build -t ${ENV}:v1.0 .' 
+                        sh 'docker build -t ca5ual/lab3:${ENV}-v1.0 .' 
                     } else if (env.BRANCH_NAME == 'dev') {
-                        sh 'docker build -t ${ENV}:v1.0 .'
+                        sh 'docker build -t ca5ual/lab3:${ENV}-v1.0 .'
                     }
                 }
             }
@@ -78,9 +76,9 @@ pipeline {
             steps {
                 script {
                     if (env.BRANCH_NAME == 'main') {
-                        sh 'docker run -d --name ${ENV} --expose ${PORT} -p ${PORT}:${PORT} ${ENV}:${TAG}'
+                        sh 'docker run -d --name ${ENV} --expose ${PORT} -p ${PORT}:${PORT} ca5ual/lab3:${ENV}-v1.0'
                     } else if (env.BRANCH_NAME == 'dev') {
-                        sh 'docker run -d --name ${ENV} --expose ${PORT} -p ${PORT}:3000 ${ENV}:${TAG}'
+                        sh 'docker run -d --name ${ENV} --expose ${PORT} -p ${PORT}:3000 ca5ual/lab3:${ENV}-v1.0'
                     }
                 }
             }

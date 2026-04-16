@@ -39,6 +39,14 @@ pipeline {
             }
         }
 
+        stage('Check Dockerfile') {
+            steps {
+                script {
+
+                }
+            }
+        }
+
         stage ('Build image') {
             steps {
                 script {
@@ -57,7 +65,7 @@ pipeline {
                                 --exit-code 0 \
                                 --severity HIGH,MEDIUM,LOW \
                                 --no-progress \
-                                --skip-db-update \
+                                --no-cache \
                                 ${image}
                         """,
                         returnStdout: true

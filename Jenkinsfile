@@ -4,6 +4,10 @@ pipeline {
     tools {
         nodejs "node" // use what I configured in tools
     }
+    
+    environment {
+        DOCKER_IMAGE = "ca5ual/lab3"
+    }
 
     stages {
         
@@ -24,10 +28,10 @@ pipeline {
                 script {
                     if (env.BRANCH_NAME == 'main') {
                         env.ENV = 'nodemain'
-                        env.PORT = '3000'
+                        env.JOB = 'Deploy_to_main'
                     } else if (env.BRANCH_NAME == 'dev') {
                         env.ENV = 'nodedev'
-                        env.PORT = '3001'
+                        env.JOB = 'Deploy_to_dev'
                     }
                 }
             }
@@ -36,11 +40,7 @@ pipeline {
         stage ('Build docker image') {
             steps {
                 script {
-                    if (env.BRANCH_NAME == 'main') {
-                        sh 'docker build -t ca5ual/lab3:${ENV}-v1.0 .' 
-                    } else if (env.BRANCH_NAME == 'dev') {
-                        sh 'docker build -t ca5ual/lab3:${ENV}-v1.0 .'
-                    }
+                    sh "docker build -t ${DOCKER_IMAGE}:${ENV}-v1.0 ."
                 }
             }
         }
@@ -57,29 +57,17 @@ pipeline {
                         sh """
                         echo \$DOCKER_PASS | docker login -u \$DOCKER_USER --password-stdin
 
-                        docker push ca5ual/lab3:${ENV}-v1.0
+                        docker push ${DOCKER_IMAGE}:${ENV}-v1.0
                         """
                     }
                 }
             }
         }
 
-        stage ('Remove old containers') {
+        stage ('Trigger deploy') {
             steps {
                 script {
-                    sh 'docker rm -f ${ENV} || true'
-                }
-            }
-        }
-
-        stage ('Run containers') {
-            steps {
-                script {
-                    if (env.BRANCH_NAME == 'main') {
-                        sh 'docker run -d --name ${ENV} --expose ${PORT} -p ${PORT}:${PORT} ca5ual/lab3:${ENV}-v1.0'
-                    } else if (env.BRANCH_NAME == 'dev') {
-                        sh 'docker run -d --name ${ENV} --expose ${PORT} -p ${PORT}:3000 ca5ual/lab3:${ENV}-v1.0'
-                    }
+                    build job: env.JOB
                 }
             }
         }

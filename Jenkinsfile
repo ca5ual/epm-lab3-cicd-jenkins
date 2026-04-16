@@ -47,6 +47,25 @@ pipeline {
             }
         }
 
+        stage('Push to docker') {
+            steps {
+                script {
+                    withCredentials([usernamePassword(
+                        credentialsId: 'docker-creds',
+                        usernameVariable: 'DOCKER_USER',
+                        passwordVariable: 'DOCKER_PASS'
+                    )]) {
+
+                        sh """
+                        echo \$DOCKER_PASS | docker login -u \$DOCKER_USER --password-stdin
+
+                        docker push ca5ual/lab3:${ENV}:v1.0
+                        """
+                    }
+                }
+            }
+        }
+
         stage ('Remove old containers') {
             steps {
                 script {

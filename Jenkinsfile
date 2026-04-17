@@ -1,10 +1,11 @@
 @Library('shared-lib') _
 
 pipeline {
-    agent any
-
-    tools {
-        nodejs "node" // use what I configured in tools
+    agent {
+        docker {
+            image 'ca5ual/lab3:nodealpine'
+            args '-v /var/run/docker.sock:/var/run/docker.sock -u root:root'
+        }
     }
 
     environment {

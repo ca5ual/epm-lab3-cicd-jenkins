@@ -43,7 +43,7 @@ pipeline {
         stage('Check Dockerfile') {
             steps {
                 script {
-                    sh "docker run --rm -i hadolint/hadolint < Dockerfile"
+                    sh "hadolint Dockerfile"
                 }
             }
         }

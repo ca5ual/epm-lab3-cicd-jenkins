@@ -332,7 +332,7 @@ trigger downstream job: "Deploy_to_main"
 ```
 ---
 
-Custom Dockerfile: Building the Perfect CI/CD Environment
+### Custom Dockerfile: Building the Perfect CI/CD Environment
 
 This project includes a **custom Dockerfile** that serves as the execution environment for all Jenkins pipeline stages.
 
@@ -358,7 +358,6 @@ RUN curl -L -o /usr/local/bin/hadolint https://github.com/hadolint/hadolint/rele
 #### Base Image: `node:7.8.0-alpine`
 - **Node.js pre-installed** - ready to run `npm install` and `npm test`
 - **Trivy, Hadolint and Docker pre-installed** - no need to install tools during pipeline execution - everything is pre-baked
-- 
 ---
 
 ## How to Use This Pipeline

@@ -247,7 +247,6 @@ This pipeline uses a **shared Jenkins library** (`@Library('shared-lib')`) for r
 ### Shared Library Functions Explained
 
 #### `buildImage(repo, env)`
-**File:** `vars/buildimage.groovy`
 
 ```groovy
 def call(String repo, String env) {
